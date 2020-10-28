@@ -1,0 +1,10 @@
+pnina.PSD
+500
+2 1000
+pnina.PSD.interp
+
+input_psd_file_name
+number_of_nodes_in_x
+min_period_out max_period_out period_increment
+output_psd_file_name
+

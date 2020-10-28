@@ -25,7 +25,7 @@ int main (int argc, char *argv[]) {
 	SAC_HD sac_header;
 	fftw_complex *temp_spect;
 	POLE_ZERO pz;
-	
+	errno_t err;
 	/* temporary arrays now used in signal_to_ground_motion to "simplify" memory management */
 	/*
 	 * double *signal, double *untapered, SPECTRUM *signal_spectrum, SPECTRUM *response_spectrum,
@@ -70,10 +70,11 @@ int main (int argc, char *argv[]) {
 
 	// copy the argument to the parameter filename
 //	strcpy(paramfile_name, argv[1]);
-	strcpy_s(paramfile_name,1, argv[1]);
+	strcpy_s(paramfile_name,100, argv[1]);
 
 	//open the parameter file
-	if (! (paramfile = fopen_s(paramfile_name,"r","a"))) {
+	
+	if ((err = fopen_s(&paramfile,paramfile_name,"r"))) {
 		fprintf(stderr,"Error: file %s not found\n", paramfile_name);
 		exit(1);
 	}
@@ -82,16 +83,16 @@ int main (int argc, char *argv[]) {
 	l=0;
 	while (fgets(buff,100,paramfile)) {
 		if (l == 0) {
-			sscanf_s(buff,"%s", sac_file_name);
+			sscanf_s(buff,"%s", sac_file_name, (unsigned)_countof(sac_file_name));
 			l++;
 		} else if (l == 1) {
-			sscanf_s(buff,"%s",pz_file_name);
+			sscanf_s(buff,"%s",pz_file_name, (unsigned)_countof(pz_file_name));
 			l++;
 		} else if (l == 2) {
 			sscanf_s(buff,"%f %f %d",&n_second_sub_record, &n_sec_shift, &acc_flag);
 			l++;
      	 	} else if (l == 3) {
-			sscanf_s(buff,"%s", output_file_name);
+			sscanf_s(buff,"%s", output_file_name, (unsigned)_countof(pz_file_name));
 			l++;
 		} 
 	}
@@ -265,7 +266,7 @@ int main (int argc, char *argv[]) {
 	
 	
 	//output
-	if (( output_file = fopen_s(output_file_name,"w","a")) == NULL) {
+	if ((err=  fopen_s(&output_file,output_file_name,"w"))) {
 		fprintf(stderr, "Error opening %s to write\n",output_file_name);
 		exit(1);
 	}

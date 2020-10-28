@@ -1416,8 +1416,9 @@ void write_sac (char *fname, float *sig, SAC_HD *SHD)
 //read a sac file
 int read_sac (char *fname, float *sig, SAC_HD *SHD, int nmax) {
 		FILE *fsac;
-        fsac = fopen_s(fname, "rb","a");
-        if ( !fsac )
+		errno_t err;
+        err = fopen_s(&fsac,fname, "rb","a");
+        if (err)
         {
          //fclose (fsac);
          return 0;
@@ -1472,20 +1473,20 @@ int read_sac_pole_zero_file(char *filename, POLE_ZERO *pz_out) {
 	double fval1, fval2;
 	double constant;
 	FILE *pz_file;	
-
+	errno_t err;
 	//initialize the pole zero file
 	zero_pole_zero(pz_out);
 
 	//try to open the file. return -1 as failure value
-	if (! (pz_file = fopen_s(filename, "r","a"))) {
+	if ((err = fopen_s(&pz_file,filename, "r","a"))) {
 		return -1;
 	}
 
 	while (fgets(buff,100,pz_file)) {
-		sscanf_s(buff,"%s %d\n", temp, &ival);
+		sscanf_s(buff,"%s %d\n", temp, (unsigned)_countof(temp), &ival);
 		//apparently comments are now put in with a single * in the first column.
 		//I will also check against using # as a comment here.
-		sscanf_s(temp,"%s",tmp2);
+		sscanf_s(temp,"%s",tmp2, (unsigned)_countof(tmp2));
 		if (!strcmp(tmp2,"*")) {
 		} else if (!strcmp(tmp2,"#")) {
 		} else if (!strcmp(temp,"ZEROS")) {
@@ -1510,7 +1511,7 @@ int read_sac_pole_zero_file(char *filename, POLE_ZERO *pz_out) {
 			zero_scan_flag = 0;
 			pole_scan_flag = 0;
 			i=-1;
-			sscanf_s(buff,"%s %lf",temp,&constant);
+			sscanf_s(buff,"%s %lf",temp, (unsigned)_countof(temp),&constant);
 			pz_out->scale = constant;
 		} else if (zero_scan_flag == 1) {
 			i++;
