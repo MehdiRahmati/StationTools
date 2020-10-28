@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 
-int main()
-{
-	printf("ok");
-}
+//int main()
+//{
+//	printf("ok");
+//}
 

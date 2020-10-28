@@ -153,6 +153,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\compute_psd.c" />
+    <ClCompile Include="src\lib_station_analysis_tools.c" />
     <ClCompile Include="StationToolsTest.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
