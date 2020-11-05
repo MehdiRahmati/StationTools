@@ -148,6 +148,7 @@ int main (int argc, char *argv[]) {
 	//hard wired for 8 hour data segments. (8*3600 = seconds in 8 hours)
 	temp_npts = (int) floor(n_second_sub_record * samples_per_second+0.5);
 	
+	int a = sizeof(*temp_signal);
 	//allocate memory for working arrays used in the next few steps.
 	if ((temp_signal = malloc(sizeof(*temp_signal) * temp_npts)) == NULL) {
 		fprintf(stderr,"Error allocating temp_signal\n");
